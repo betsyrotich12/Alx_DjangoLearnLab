@@ -1,4 +1,5 @@
 # Delete retrieved books
+from bookshelf.models import Book
 
 In [15]: retrieved_book.delete()
 
