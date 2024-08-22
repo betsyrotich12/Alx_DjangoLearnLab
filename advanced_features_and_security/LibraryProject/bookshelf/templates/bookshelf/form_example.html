@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Edit Book</h1>
+
+  <!-- Display form errors, if any -->
+  {% if form.errors %}
+    <div class="error">
+      <p>Please correct the following errors:</p>
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <!-- Form to edit book -->
+  <form method="post" action="{% url 'edit_book' book.id %}">
+    {% csrf_token %}
+    {{ form.as_p }} <!-- Render form fields as paragraphs -->
+    <button type="submit">Save Changes</button>
+  </form>
+{% endblock %}
