@@ -140,3 +140,32 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'https://trusted-scripts.com')
 CSP_STYLE_SRC = ("'self'", 'https://trusted-styles.com')
 
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # One year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow the site to be preloaded in HSTS lists
+
+# Other security settings
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only sent over HTTPS
+
+# Security headers
+X_FRAME_OPTIONS = 'DENY'  # Protect against clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable browser's XSS filtering
+
+# Secure cookie settings
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Protect against clickjacking by preventing the site from being framed
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent MIME-sniffing by enforcing the declared content-type
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enable the browser's XSS filtering to prevent cross-site scripting attacks
+SECURE_BROWSER_XSS_FILTER = True
