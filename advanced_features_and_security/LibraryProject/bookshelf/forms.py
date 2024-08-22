@@ -17,3 +17,8 @@ class BookEditForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter new title'}),
         }
 
+# Example form to demonstrate form structure
+class ExampleForm(forms.Form):
+    name = forms.CharField(max_length=100, label='Your Name')
+    email = forms.EmailField(label='Your Email')
+    message = forms.CharField(widget=forms.Textarea, label='Your Message')
