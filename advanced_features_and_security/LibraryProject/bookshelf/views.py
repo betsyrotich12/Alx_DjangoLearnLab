@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from .models import Book
 from .forms import BookSearchForm
 from .forms import BookEditForm
-
+from .forms import ExampleForm
 # View to handle book listing with search functionality
 @permission_required('bookshelf.can_view', raise_exception=True)
 def book_list(request):
@@ -33,3 +33,16 @@ def edit_book(request, book_id):
     else:
         form = BookEditForm(instance=book)
         return render(request, 'bookshelf/edit_book.html', {'form': form})
+
+# View to handle the ExampleForm
+def example_form_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Handle the form submission, e.g., save data, send an email, etc.
+            return HttpResponse("Form submitted successfully!")
+        else:
+            return render(request, 'bookshelf/example_form.html', {'form': form})
+    else:
+        form = ExampleForm()
+        return render(request, 'bookshelf/example_form.html', {'form': form})
