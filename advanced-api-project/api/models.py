@@ -11,22 +11,7 @@ class Book(models.Model):
     publication_year = models.IntegerField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = ['title', 'publication_year', 'author']
 
-    def validate_publication_year(self, value):
-        current_year = datetime.now().year
-        if value > current_year:
-            raise serializers.ValidationError("Publication year cannot be a future date")
-        return value
-
-class AuthorSerializer(serializers.ModelSerializer):
-    books = BookSerializer(many=True, read_only=True)
-    class Meta:
-        model = Author
-        fields = ['name', 'books']
 
 
 
