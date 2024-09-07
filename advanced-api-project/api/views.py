@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework import mixins
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 # Create your views here.
 
@@ -27,7 +27,7 @@ class BookDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
 class BookCreateView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes =  [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -40,7 +40,7 @@ class BookCreateView(mixins.CreateModelMixin, generics.GenericAPIView):
 class BookUpdateView(mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def perform_update(self, serializer):
         serializer.save()
@@ -54,7 +54,7 @@ class BookUpdateView(mixins.UpdateModelMixin, generics.GenericAPIView):
 class BookDeleteView(mixins.DestroyModelMixin, generics.GenericAPIView):
      queryset = Book.objects.all()
      serializer_class = BookSerializer
-     permission_classes = [IsAuthenticatedOrReadOnly]
+     permission_classes = [IsAuthenticated]
 
      def delete(self, request, *args, **kwargs):
          return self.destroy( request, *args, **kwargs)
