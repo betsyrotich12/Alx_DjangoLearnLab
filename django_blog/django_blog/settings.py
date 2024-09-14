@@ -58,7 +58,7 @@ STATICFILES_DIRS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',  # Define the template backend
-        'DIRS': [BASE_DIR / 'templates'],  # Path to your custom templates directory
+        'DIRS': [BASE_DIR /'blog'/'templates'],  # Path to your custom templates directory
         'APP_DIRS': True,  # Automatically discover templates in app directories
         'OPTIONS': {
             'context_processors': [
