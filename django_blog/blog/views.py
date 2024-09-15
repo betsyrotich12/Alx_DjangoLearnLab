@@ -120,7 +120,7 @@ class CommentDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.object.post.id})
     
-def posts_by_tag(request, tag_slug):
+def PostByTagListView(request, tag_slug):
     tag = Tag.objects.get(slug=tag_slug)
     posts = Post.objects.filter(tags=tag)
     return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
