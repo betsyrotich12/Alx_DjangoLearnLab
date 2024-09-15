@@ -2,6 +2,7 @@ from django import forms
 from .models import Profile
 from .models import Post
 from .models import Comment
+from taggit.forms import TagWidget
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -22,5 +23,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 3}),
+            'tags': TagWidget(),  # Use TagWidget for tags field
         }
