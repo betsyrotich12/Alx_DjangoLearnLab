@@ -1,6 +1,6 @@
 from django import forms
 from .models import Profile
-from .models import Post, Tag
+from .models import Post
 from .models import Comment
 
 class ProfileForm(forms.ModelForm):
@@ -9,10 +9,10 @@ class ProfileForm(forms.ModelForm):
         fields = ['bio', 'profile_picture']
 
 class PostForm(forms.ModelForm):
-     tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(),
-        widget=forms.CheckboxSelectMultiple
-    )
+    #  tags = forms.ModelMultipleChoiceField(
+    #     queryset=Tag.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple
+    # )
      class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
