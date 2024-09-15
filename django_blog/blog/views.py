@@ -10,12 +10,13 @@ from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm
 from .forms import PostForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from .models import Post, Tag
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseForbidden
 from .forms import CommentForm
 from django.shortcuts import get_object_or_404
 from .models import Comment
+from django.db.models import Q
 
 # Create your views here.
 
@@ -117,3 +118,21 @@ class CommentDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.object.post.id})
+    
+def posts_by_tag(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    posts = Post.objects.filter(tags=tag)
+    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
+
+def post_search(request):
+    query = request.GET.get('q')
+    posts = Post.objects.all()
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(request, 'blog/post_search.html', {'posts': posts, 'query': query})
