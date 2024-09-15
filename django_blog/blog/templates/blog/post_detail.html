@@ -1,12 +1,46 @@
 <!-- blog/templates/blog/post_detail.html -->
 {% extends "base_generic.html" %}
+
 {% block content %}
-<h2>{{ object.title }}</h2>
-<p>{{ object.content }}</p>
-<p>Author: {{ object.author }}</p>
-<p>Created at: {{ object.created_at }}</p>
-<p>Updated at: {{ object.updated_at }}</p>
-<a href="{% url 'post_update' object.pk %}">Edit</a>
-<a href="{% url 'post_delete' object.pk %}">Delete</a>
-<a href="{% url 'post_list' %}">Back to list</a>
+    <h2>{{ object.title }}</h2>
+    <p>{{ object.content }}</p>
+    <p>Author: {{ object.author }}</p>
+    <p>Created at: {{ object.created_at|date:"F j, Y, g:i a" }}</p>
+    <p>Updated at: {{ object.updated_at|date:"F j, Y, g:i a" }}</p>
+    
+    <!-- If the user is authenticated and is the author of the post, display the Edit/Delete links -->
+    {% if user.is_authenticated and user == object.author %}
+    <a href="{% url 'post_update' object.pk %}">Edit</a>
+    <a href="{% url 'post_delete' object.pk %}">Delete</a>
+    {% endif %}
+    
+    <a href="{% url 'post_list' %}">Back to list</a>
+
+    <!-- Comment Section (if comments are part of the post) -->
+    <h3>Comments:</h3>
+    {% for comment in object.comment_set.all %}
+        <p><strong>{{ comment.author }}</strong> ({{ comment.created_at|date:"F j, Y, g:i a" }})</p>
+        <p>{{ comment.content }}</p>
+        <!-- Show edit/delete options for the comment if the user is the author -->
+        {% if user.is_authenticated and user == comment.author %}
+            <a href="{% url 'comment_update' comment.pk %}">Edit</a>
+            <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+        {% endif %}
+    {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+    
+    <!-- Comment Form -->
+  <!-- Comment Form -->
+{% if user.is_authenticated %}
+<h3>Leave a Comment:</h3>
+<form method="post" action="{% url 'add_comment' object.pk %}">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Post Comment</button>
+</form>
+{% else %}
+<p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+{% endif %}
+
 {% endblock %}
