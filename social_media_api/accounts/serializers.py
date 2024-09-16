@@ -2,10 +2,8 @@
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import update_last_login
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueValidator
-from django.contrib.auth import authenticate
 
 # Get the custom user model
 User = get_user_model()
@@ -23,14 +21,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password', 'bio', 'profile_picture']
 
     def create(self, validated_data):
-        user = User(
+        # Create the user using create_user method (handles password hashing)
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
+            password=validated_data['password'],
             bio=validated_data.get('bio', ''),
-            profile_picture=validated_data.get('profile_picture', None),
+            profile_picture=validated_data.get('profile_picture', None)
         )
-        user.set_password(validated_data['password'])
-        user.save()
+
+        # Create a token for the newly created user
+        Token.objects.create(user=user)
+
         return user
 
 # Login serializer
@@ -47,8 +49,8 @@ class LoginSerializer(serializers.Serializer):
         if user is None:
             raise serializers.ValidationError("Invalid login credentials")
         
+        # Retrieve or create a token for the authenticated user
         token, created = Token.objects.get_or_create(user=user)
-        update_last_login(None, user)
         
         return {
             'username': user.username,
