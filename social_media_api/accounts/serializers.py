@@ -1,7 +1,6 @@
-# accounts/serializers.py
-
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueValidator
 
@@ -21,8 +20,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password', 'bio', 'profile_picture']
 
     def create(self, validated_data):
-        # Create the user using create_user method (handles password hashing)
-        user = User.objects.create_user(
+        # Use get_user_model().objects.create_user to create the user
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
