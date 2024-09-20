@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 
-from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer
+from .serializers import FollowUserSerializer, RegisterSerializer, LoginSerializer, ProfileSerializer, UnfollowUserSerializer
 
 User = get_user_model()
 
@@ -43,4 +43,26 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_follow = get_object_or_404(User, id=user_id)
+        if request.user.is_following(user_to_follow):
+            return Response({'detail': 'You are already following this user.'}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.follow(user_to_follow)
+        serializer = FollowUserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UnfollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_unfollow = get_object_or_404(User, id=user_id)
+        if not request.user.is_following(user_to_unfollow):
+            return Response({'detail': 'You are not following this user.'}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.unfollow(user_to_unfollow)
+        serializer = UnfollowUserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
