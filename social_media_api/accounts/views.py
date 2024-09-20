@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
+from rest_framework import generics
 
 from .serializers import FollowUserSerializer, RegisterSerializer, LoginSerializer, ProfileSerializer, UnfollowUserSerializer
 
@@ -44,7 +45,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
     
-class FollowUserView(APIView):
+class FollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):
@@ -55,7 +56,7 @@ class FollowUserView(APIView):
         serializer = FollowUserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):
