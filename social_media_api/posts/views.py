@@ -9,7 +9,8 @@ from rest_framework.views import APIView
 from notifications.models import Notification
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
-
+from rest_framework import status
+from rest_framework import generics
 
 # Create your views here.
 
@@ -43,7 +44,7 @@ class FeedView(APIView):
 
 @api_view(['POST'])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     user = request.user
 
     # Check if user has already liked the post
@@ -51,7 +52,7 @@ def like_post(request, pk):
         return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # Create a like
-    like = Like.objects.create(user=user, post=post)
+    like = Like.objects.get_or_create(user=request.user, post=post)
     
     # Create notification
     Notification.objects.create(
