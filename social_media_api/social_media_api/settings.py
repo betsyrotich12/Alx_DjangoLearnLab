@@ -28,6 +28,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["167.99.11.181", "ubuntu-s-2vcpu-4gb-amd-nyc1-01"]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_SSL_REDIRECT = True
 
 
 # Application definition
